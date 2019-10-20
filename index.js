@@ -19,6 +19,8 @@ const projects = [];
 
 function checkProjectExists(req, res, next) {
   const { id } = req.params;
+
+  // Aqui retorna para a const project o projeto q atende a condição passada no find
   const project = projects.find(p => p.id === id);
 
   if (!project) {
@@ -66,11 +68,36 @@ server.put("/projects/:id", checkProjectExists, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
+  // Aqui retorna para a "const project" o projeto q atende a condição passada no "find()"
   const project = projects.find(p => p.id === id);
 
-  console.log(project);
   project.title = title;
-  console.log("PUT feito");
+
+  return res.json(project);
+});
+
+server.delete("/projects/:id", checkProjectExists, (req, res) => {
+  const { id } = req.params;
+
+  const projectIndex = projects.findIndex(p => p.id === id);
+
+  projects.splice(projectIndex, 1);
+
+  console.log("Projeto deletado");
+  return res.send();
+});
+
+/**
+ * Tasks
+ */
+
+server.post("/projects/:id/tasks", checkProjectExists, (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const project = projects.find(p => p.id === id);
+
+  project.tasks.push(title);
 
   return res.json(project);
 });
