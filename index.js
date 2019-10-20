@@ -49,6 +49,13 @@ server.use(logRequests);
 server.get("/projects", (req, res) => {
   res.status(200).json(projects);
 });
+server.get("/projects/:id", checkProjectExists, (req, res) => {
+  const { id } = req.params;
+
+  const project = projects.find(p => p.id === id);
+
+  return res.json(project);
+});
 
 server.post("/projects", (req, res) => {
   const { id, title } = req.body;
