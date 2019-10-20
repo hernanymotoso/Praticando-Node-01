@@ -4,26 +4,75 @@ const server = express();
 
 server.use(express.json());
 
-server.get("/", (req, res) => {
-  console.log("Estou detro do /");
-});
+/**
+ * Utilizamos a variavel 'numberOfRequests' como 'let'
+ * porque vai sifrer mutação. A variavel 'projects' pode ser 'const' porque um
+ * 'array' pode receber adições ou exclusoes mesmo sendo uma constante
+ */
 
+let numberOfRequests = 0;
 const projects = [];
-server.post("/projects", (req, res) => {
-  const dados = {};
 
-  dados.id = req.body.id;
-  dados.title = req.body.title;
-  dados.tasks = ["Ex1", "Ex2", "Ex3"];
+/**
+ * Middleware que checa se o projeto existe
+ */
 
-  projects.push(dados);
+function checkProjectExists(req, res, next) {
+  const { id } = req.params;
+  const project = projects.find(p => p.id === id);
 
-  res.status(201).json(projects);
-  console.log("Projeto criado!!!");
-});
+  if (!project) {
+    return res.status(400).json({ error: "Project not found" });
+  }
+
+  return next();
+}
+/**
+ * Middleware q da log no numero de requisições
+ */
+function logRequests(req, res, next) {
+  numberOfRequests++;
+
+  console.log(`Numero de requisições: ${numberOfRequests}`);
+
+  return next();
+}
+
+server.use(logRequests);
+
+/**
+ * Projects
+ */
 
 server.get("/projects", (req, res) => {
   res.status(200).json(projects);
+});
+
+server.post("/projects", (req, res) => {
+  const { id, title } = req.body;
+
+  const project = {
+    id,
+    title,
+    tasks: []
+  };
+
+  projects.push(project);
+  console.log("Projeto criado!!!");
+  return res.status(201).json(project);
+});
+
+server.put("/projects/:id", checkProjectExists, (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const project = projects.find(p => p.id === id);
+
+  console.log(project);
+  project.title = title;
+  console.log("PUT feito");
+
+  return res.json(project);
 });
 
 server.listen(3000, () => {
