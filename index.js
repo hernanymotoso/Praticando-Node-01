@@ -6,7 +6,9 @@ server.use(express.json());
 
 /**
  * Utilizamos a variavel 'numberOfRequests' como 'let'
- * porque vai sifrer mutação. A variavel 'projects' pode ser 'const' porque um
+ * porque vai sifrer mutação.
+ *
+ *  A variavel 'projects' é 'const' porque um
  * 'array' pode receber adições ou exclusoes mesmo sendo uma constante
  */
 
