@@ -10,10 +10,16 @@ server.get("/", (req, res) => {
 
 const projetos = [];
 server.post("/projects", (req, res) => {
-  let dados = [];
-  const { id } = req.body;
-  const { title } = req.body;
-  const tasks = ["Ex1", "Ex2", "Ex3"];
+  const dados = {};
+
+  dados.id = req.body.id;
+  dados.title = req.body.title;
+  dados.tasks = ["Ex1", "Ex2", "Ex3"];
+
+  projetos.push(dados);
+
+  res.status(201).json(projetos);
+  console.log("Projeto criado!!!");
 });
 
 server.listen(3000, () => {
