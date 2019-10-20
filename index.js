@@ -8,7 +8,7 @@ server.get("/", (req, res) => {
   console.log("Estou detro do /");
 });
 
-const projetos = [];
+const projects = [];
 server.post("/projects", (req, res) => {
   const dados = {};
 
@@ -16,10 +16,14 @@ server.post("/projects", (req, res) => {
   dados.title = req.body.title;
   dados.tasks = ["Ex1", "Ex2", "Ex3"];
 
-  projetos.push(dados);
+  projects.push(dados);
 
-  res.status(201).json(projetos);
+  res.status(201).json(projects);
   console.log("Projeto criado!!!");
+});
+
+server.get("/projects", (req, res) => {
+  res.status(200).json(projects);
 });
 
 server.listen(3000, () => {
